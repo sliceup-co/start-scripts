@@ -29,8 +29,11 @@
 # Start Cluster
     /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh 
 
-    flink-1.10.0/bin/flink run log-lines-proc-1.0.jar --init conf.ini &
+    sleep 5
 
-    java -cp db-cleaner.jar com.sliceup.dbcleaner.Main conf.ini &
+    /opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/klog-lines-proc-1.0.jar --init conf.ini &
+
+    java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
 
     sleep 10
+

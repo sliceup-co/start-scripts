@@ -255,6 +255,7 @@ export SSHPASS="$sspass1"
     echo "" > /opt/sliceup/executables/flink-1.10.0/conf/slaves
     for address in "${ipaddresses[@]}"
          do
+            echo "Pass"
             #echo "$address"  >> /opt/sliceup/executables/flink-1.10.0/conf/slaves 
             #echo "$address"  >> /opt/sliceup/executables/flink-1.10.0/conf/slaves 
          done
@@ -317,9 +318,9 @@ echo -e "\e[96m Starting Cluster  \e[39m"
 /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh #(It will ask the passwords of the worker nodes)
 sleep 5
 
-flink-1.10.0/bin/flink run log-lines-proc-1.0.jar --init conf.ini &
+/opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/klog-lines-proc-1.0.jar --init conf.ini &
 
-java -cp db-cleaner.jar com.sliceup.dbcleaner.Main conf.ini &
+java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
 
 sleep 10
 
