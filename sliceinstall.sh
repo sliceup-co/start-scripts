@@ -95,6 +95,8 @@ export SSHPASS="$sspass1"
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/flink-1.10.0/conf/flink-conf.yaml"
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
+            sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "echo $sspass1 | sudo -S /opt/sliceup/scripts/workerstart.sh"
+
          done
 
 
@@ -199,6 +201,10 @@ export SSHPASS="$sspass1"
         sudo sed -i "s/# IPv4 local connections:/# IPv4 local connections:\n$line/" /etc/postgresql/10/main/pg_hba.conf
     done
 
+    line="host    all             all             $masterip\/32            md5"
+    sudo sed -i "s/# IPv4 local connections:/# IPv4 local connections:\n$line/" /etc/postgresql/10/main/pg_hba.conf
+
+
     echo -e "\e[96m Install Additonal Supporting Files  \e[39m"
 
     sudo systemctl restart postgresql
@@ -253,12 +259,6 @@ export SSHPASS="$sspass1"
 #Replace {WORKER_IPS} in executables/flink-1.10.0/conf/slaves with list of worker ips
     # The current file is blank so adding marker
     echo "" > /opt/sliceup/executables/flink-1.10.0/conf/slaves
-    for address in "${ipaddresses[@]}"
-         do
-            echo "Pass"
-            #echo "$address"  >> /opt/sliceup/executables/flink-1.10.0/conf/slaves 
-            #echo "$address"  >> /opt/sliceup/executables/flink-1.10.0/conf/slaves 
-         done
        
 #Grafana Install
     echo -e "\e[96m Installing Grafana  \e[39m"
@@ -318,9 +318,9 @@ echo -e "\e[96m Starting Cluster  \e[39m"
 /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh #(It will ask the passwords of the worker nodes)
 sleep 5
 
-/opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/klog-lines-proc-1.0.jar --init conf.ini &
-
 java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
+
+/opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/log-lines-proc-1.0.jar --init /opt/sliceup/executables/conf.ini &
 
 sleep 10
 
