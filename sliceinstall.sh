@@ -95,7 +95,7 @@ export SSHPASS="$sspass1"
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/flink-1.10.0/conf/flink-conf.yaml"
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
-            sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "echo $sspass1 | sudo -S /opt/sliceup/scripts/workerstart.sh"
+            sshpass -ev ssh -o "StrictHostKeyChecking=no" $address /opt/sliceup/scripts/workerstart.sh
 
          done
 
