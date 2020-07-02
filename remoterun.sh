@@ -25,9 +25,9 @@
     sudo apt-get install python-dev -y
     sudo apt-get install python3-dev -y
     sudo apt-get install build-essential -y
-    sudo apt install python3-pip
-    python3 -m pip install requests
-    python3 -m pip install selenium
+    sudo apt install python3-pip -y
+    python3 -m pip install requests -y
+    python3 -m pip install selenium -y
 
 
     sudo mv workerstart.sh /opt/sliceup/scripts/workerstart.sh
