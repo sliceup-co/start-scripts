@@ -339,7 +339,7 @@ sudo systemctl enable slicemaster
 # Start Cluster
 echo -e "\e[96m Starting Cluster  \e[39m"
 /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh #(It will ask the passwords of the worker nodes)
-sleep 180
+sleep 300
 
 java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
 
