@@ -98,7 +98,7 @@ export SSHPASS="$sspass1"
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/conf.ini"
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
-            #sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "python3 /opt/sliceup/executables/task-exec-monitor.py $address &"
+            sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "python3 /opt/sliceup/executables/task-exec-monitor.py $address &"
 
          done
 
