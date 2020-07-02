@@ -2,7 +2,9 @@
 Description=Slice Worker Start
 
 [Service]
-ExecStart=/opt/sliceup/scripts/workerstart.sh
+RemainAfterExit=true
+ExecStart=python3 /opt/sliceup/executables/task-exec-monitor.py
+
 
 [Install]
 WantedBy=multi-user.target
