@@ -21,6 +21,15 @@
     sudo apt install openjdk-11-jre-headless -y
     sudo apt install openjdk-11-jdk-headless -y
 
+    sudo apt-get install build-essential autoconf libtool pkg-config python-opengl python-pil python-pyrex python-pyside.qtopengl idle-python2.7 qt4-dev-tools qt4-designer libqtgui4 libqtcore4 libqt4-xml libqt4-test libqt4-script libqt4-network libqt4-dbus python-qt4 python-qt4-gl libgle3 python-dev -y
+    sudo apt-get install python-dev -y
+    sudo apt-get install python3-dev -y
+    sudo apt-get install build-essential -y
+    sudo apt install python3-pip
+    python3 -m pip install requests
+    python3 -m pip install selenium
+
+
     sudo mv workerstart.sh /opt/sliceup/scripts/workerstart.sh
     #sudo mv workerinstall.sh /opt/sliceup/scripts/workerinstall.sh
 	sudo chmod +x /opt/sliceup/scripts/workerstart.sh
