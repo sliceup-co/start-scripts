@@ -98,11 +98,14 @@ export SSHPASS="$sspass1"
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/conf.ini"
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
+            echo -e "\e[96m Before the python script... \e[39m"
+
             sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "python3 /opt/sliceup/executables/task-exec-monitor.py $address &"
+
+            echo -e "\e[96m After the python script... \e[39m" 
 
          done
 
-        exit
 
 
 #Check to see if Java working on remote node.

@@ -29,7 +29,7 @@
 # Start Cluster
     /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh 
 
-    sleep 5
+    sleep 180
 
     java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
 
