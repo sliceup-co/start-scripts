@@ -100,7 +100,7 @@ export SSHPASS="$sspass1"
 
             echo -e "\e[96m Before the python script... \e[39m"
 
-            sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "python3 /opt/sliceup/executables/task-exec-monitor.py $address &"
+            sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "nohup python3 /opt/sliceup/executables/task-exec-monitor.py $address &"
 
             echo -e "\e[96m After the python script... \e[39m" 
 
