@@ -93,11 +93,15 @@ export SSHPASS="$sspass1"
             sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "echo $sspass1 | sudo -S ./remoterun.sh"
 	    
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/flink-1.10.0/conf/flink-conf.yaml"
+            insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/conf.ini"
+
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
             sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "python3 /opt/sliceup/executables/task-exec-monitor.py $address"
 
          done
+
+        exit
 
 
 #Check to see if Java working on remote node.
