@@ -1,4 +1,4 @@
-# this is the start script
+#!/bin/bash 
 
   export _JAVA_OPTIONS="-Djava.net.preferIPv4Stack=true"
 
