@@ -35,7 +35,9 @@
 
     /opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/log-lines-proc-1.0.jar --init /opt/sliceup/executables/conf.ini
 
-    echo -e "\e[96m Flink-job finished executing so we are rebooting the machine  \e[39m"
+    echo -e "\e[96m Flink-job finished executing so we are restarting the job  \e[39m"
 
-    reboot -h 0
+    sleep 10
+    
+
 

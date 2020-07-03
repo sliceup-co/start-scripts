@@ -2,7 +2,8 @@
 Description=Slice Master Start
 
 [Service]
-RemainAfterExit=true
+Restart=always
+RestartSec=3
 ExecStart=/opt/sliceup/scripts/masterstart.sh
 
 [Install]
