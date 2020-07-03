@@ -1,5 +1,7 @@
 #!/bin/bash
 #create directory structure
+    
+
     K=1 && mkdir /tmp/zookeeper$K && echo $K >> /tmp/zookeeper$K/myid
     K=2 && mkdir /tmp/zookeeper$K && echo $K >> /tmp/zookeeper$K/myid
     K=3 && mkdir /tmp/zookeeper$K && echo $K >> /tmp/zookeeper$K/myid
@@ -29,9 +31,22 @@
 # Start Cluster
     /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh 
 
-    sleep 300
+    echo -e "\e[96m Phase 0/5 of job initialization started.  \e[39m"
+    sleep 50
+    echo -e "\e[96m Phase 0/5 of job initialization completed.  \e[39m"
+    sleep 50
+    echo -e "\e[96m Phase 1/5 of job initialization completed.  \e[39m"
+    sleep 50
+    echo -e "\e[96m Phase 2/5 of job initialization completed.  \e[39m"
+    sleep 50
+    echo -e "\e[96m Phase 3/5 of job initialization completed.  \e[39m"
+    sleep 50
+    echo -e "\e[96m Phase 4/5 of job initialization completed.  \e[39m"
+
 
     java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
+    sleep 50
+    echo -e "\e[96m Phase 5/5 of job initialization completed.  \e[39m"
 
     /opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/log-lines-proc-1.0.jar --init /opt/sliceup/executables/conf.ini
 
