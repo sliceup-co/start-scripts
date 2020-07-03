@@ -1,48 +1,58 @@
 #!/bin/bash
+    echo -e "\e[96m Do not run this script with sudo. The script will use sudo when appropiate.\e[39m"
+    echo -e "\e[96m This script is meant to be run with Ubuntu 18.04. It might work with higher versions but it hasn't been tested.\e[39m"
+    echo -e "\e[96m Please ensure that all servers in the cluster have full access to each other.\e[39m"
+    echo -e "\e[96m Make sure that all the worker nodes have the same password. \e[39m"
+    echo -e "\e[96m When complete, go to http://ipaddress_of_master:3000 Default user: admin, password: admin.\e[39m"
+    echo -e "\ee[96m Press Enter to continue. \e[39m"
+    read y 
 
-    echo -e "\e[96m Give users detailed instructions\e[39m"
-    echo -e "\e[96m Download tar ball \e[39m"
-
+#Make sure the tar file is present.
+executablestest=$(ls executables.tar.gz)
+                   if [[ "$executablestest" != "executables.tar.gz" ]]; then	
+                        echo -e "\e[96m The file executables.tar.gz was not found in the same directory as the install script SSH. \e[39m"
+                        echo -e "\e[96m Please resolve and run the script again. \e[39m"
+                        exit
+                    fi
 
 #install sshpas
 sudo apt-get install -y sshpass
 
 #Get password for postgres
-    echo -e "\e[96m Please enter the password for the database  \e[39m"
+    echo -e "\e[96m Please enter the password for the database.  \e[39m"
     read psqlpass
 
 
 #Get node IP info from end user
-    echo -e "\e[96m This is the master node. Enter a comma seperated list of all workernode IP addresses"
+    echo -e "\e[96m Enter a comma seperated list of all workernode IP addresses. (This is the master node)"
     echo -e "Example 192.0.2.1,192.0.2.33,192.0.2.99 \e[39m"
     #read ipaddressin
     IFS=',' read -r -a ipaddresses
 
 # Get IP address of the Master
-    echo -e "\e[96m This device is being configured as the master. Enter on of its IP addresses to be used to communicate with the worker nodes"
-    echo -e "e.g. 192.0.2.100 \e[39m"
+    echo -e "\e[96m This device is being configured as the master. Enter the IP address of the interface used to communicate with the worker nodes."
+    echo -e "\e[96m e.g. 192.0.2.100 \e[39m"
     read masterip
 
 
 #Get syslog port
-    echo -e "\e[96m Enter the port that will be used to recieve \e[39m"
+    echo -e "\e[96m Enter the port that will be used to receive logs. (e.g. 514) \e[39m"
     read port
 
 #Ask for password 
-    echo -e "\e[96m The system needs to ssh into the worker nodes to complete the install \e[39m" 
-        echo -e "\e[96m Enter the password for the remote worker \e[39m" 
+    echo -e "\e[96m The system needs to ssh into the worker nodes to complete the install. \e[39m" 
+        echo -e "\e[96m Enter the password for the remote worker. \e[39m" 
         read -s sspass1
-        echo -e "\e[96m Enter password again\e[39m"
+        echo -e "\e[96m Enter password again. \e[39m"
         read -s sspass2
 
         while [[ "$sspass1" != "$sspass2" ]]; do	
          
             echo -e "\e[96m The passwords do not match. Let's try again. \e[39m" 
-            echo -e "\e[96m Enter password \e[39m" 
+            echo -e "\e[96m Enter password. \e[39m" 
             read -s sspass1
-            echo -e "\e[96m Enter password again\e[39m"
-            read -s sspass2
-          
+            echo -e "\e[96m Enter password again. \e[39m"
+            read -s sspass2         
         done
 
 export SSHPASS="$sspass1"
@@ -54,7 +64,7 @@ export SSHPASS="$sspass1"
             pingtest=$(ping -nq -w 2 -c 1 $address | grep -o "=")    
 
                     if [[ "$pingtest" != "=" ]]; then	
-                        echo -e "\e[96m $address is not reachable via ping \e[39m"
+                        echo -e "\e[96m $address is not reachable via ping. \e[39m"
                         echo -e "\e[96m Please resolve and try again. \e[39m"
                         exit
                       
@@ -63,6 +73,7 @@ export SSHPASS="$sspass1"
          done
 
 	 echo -e "\e[96m Success! All devices rechable via ping. Continuing. \e[39m"
+     sleep 2
 
 # Check for SSH reachablility
     for address in "${ipaddresses[@]}"
@@ -72,7 +83,7 @@ export SSHPASS="$sspass1"
             linux=$(sshpass -ev ssh -o "StrictHostKeyChecking=no" $address uname)    
 
                     if [[ "$linux" != "Linux" ]]; then	
-                        echo -e "\e[96m $address is not reachable via SSH \e[39m"
+                        echo -e "\e[96m $address is not reachable via SSH. \e[39m"
                         echo -e "\e[96m Please resolve and try again. \e[39m"
                         exit
                       
@@ -83,12 +94,13 @@ export SSHPASS="$sspass1"
 
 
 	echo -e "\e[96m Success! All devices rechable via SSH. Continuing. \e[39m"
+    sleep 2
 
 #Install code on remote devices
 
     for address in "${ipaddresses[@]}"
          do
-	      echo -e "\e[96m Starting process for $address \e[39m"
+	      echo -e "\e[96m Starting process for $address: \e[39m"
             sshpass -ev rsync -avz -e ssh --progress executables.tar.gz remoterun.sh workerstart.sh sliceworker.service $address:
             sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "echo $sspass1 | sudo -S ./remoterun.sh"
 	    
@@ -98,29 +110,27 @@ export SSHPASS="$sspass1"
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/conf.ini"
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
-            echo -e "\e[96m Before the python script... \e[39m"
-
             sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "nohup python3 /opt/sliceup/executables/task-exec-monitor.py $address > foo.out 2> foo.err < /dev/null &"
-
-            echo -e "\e[96m After the python script... \e[39m" 
-
+            
+            echo -e "\e[96m Process finished for $address. \e[39m"
+            sleep 2
          done
+
+    echo -e "\e[96m All worker nodes installed complete. \e[39m"
+    sleep 2
 
 
 
 #Check to see if Java working on remote node.
-
-
     for address in "${ipaddresses[@]}"
          do
 
             jversion=$(sshpass -ev ssh -o "StrictHostKeyChecking=no" $address java --version | grep -oh 'OpenJDK 64-Bit')    
 
                     if [[ "$jversion" != "OpenJDK 64-Bit" ]]; then	
-                        echo -e "\e[96m $address is not Running the correct version of Java \e[39m"
-                        echo -e "\e[96m Please resolve and run script agin \e[39m"
-                        exit
-                      
+                        echo -e "\e[96m $address is not Running the correct version of Java. \e[39m"
+                        echo -e "\e[96m Please resolve and run script again. \e[39m"
+                        exit                      
                     fi
 
 
@@ -128,12 +138,13 @@ export SSHPASS="$sspass1"
 
 
 
-	echo -e "\e[96m Success! All devices running correct Java version. Continuing install of master node \e[39m"
-
+	echo -e "\e[96m Success! All devices running correct Java version. Continuing install of master node. \e[39m"
+    sleep 2
 
 
 ##########################Begin Master Install#####################################
 
+	echo -e "\e[96m Starting master's install. \e[39m"
 
 #update system
     sudo apt-get update
@@ -145,16 +156,8 @@ export SSHPASS="$sspass1"
     cuser=$(whoami)
     sudo chown -R $cuser /opt/sliceup
 
-# get files remove this section and uncomment CURL when available"
-
-    echo -e "\e[96m Need way to download TAR files  \e[39m"
-   
-
-# get files remove this section and uncomment CURL when available"
 
 
-
-	echo -e "\e[96m  Need way to download TAR files \e[39m"
 	sudo rm workerinstall.sh
 	sudo rm workerstart.sh
 	sudo rm sliceworker.service
@@ -163,13 +166,6 @@ export SSHPASS="$sspass1"
 	sudo chmod +x /opt/sliceup/scripts/masterstart.sh
 	sudo mv slicemaster.service /etc/systemd/system/slicemaster.service
 	
-
-
-    echo -e "\e[96m This script is not using CURL. When Curl is avaialbe, enable it in the script \e[39m"
-    sleep 5
-
-
-
 
 # begin install
 
@@ -182,7 +178,7 @@ export SSHPASS="$sspass1"
     sudo apt install openjdk-11-jdk-headless -y
 
 #changing curl --proto '=https' --tlsv1.2 -sSf https://sh.vector.dev | sh
-    echo -e "\e[96m Install Vector and Postgress  \e[39m"
+    echo -e "\e[96m Install Vector and Postgres  \e[39m"
     curl --proto '=https' --tlsv1.2 -O https://packages.timber.io/vector/0.9.X/vector-amd64.deb
     sudo dpkg -i vector-amd64.deb
     sudo systemctl start vector
@@ -191,7 +187,7 @@ export SSHPASS="$sspass1"
     sleep 10
 
 #create variable requires config for sliceupdev
-    echo -e "\e[96m Config Postgres  \e[39m"
+    echo -e "\e[96m Config Postgres.  \e[39m"
     sudo -u postgres psql -c "CREATE USER sliceup WITH PASSWORD '$psqlpass';"
     sudo -u postgres psql -c "ALTER ROLE sliceup WITH SUPERUSER INHERIT CREATEROLE CREATEDB LOGIN NOREPLICATION NOBYPASSRLS;"
     sudo -u postgres psql -c "CREATE DATABASE sliceup"
@@ -213,7 +209,7 @@ export SSHPASS="$sspass1"
     sudo sed -i "s/# IPv4 local connections:/# IPv4 local connections:\n$line/" /etc/postgresql/10/main/pg_hba.conf
 
 
-    echo -e "\e[96m Install Additonal Supporting Files  \e[39m"
+    echo -e "\e[96m Install additonal supporting files.  \e[39m"
 
     sudo systemctl restart postgresql
     sudo apt-get install libpq-dev -y
@@ -229,7 +225,7 @@ export SSHPASS="$sspass1"
     python3 -m pip install kafka-python
 
 
-    echo -e "\e[96m Replace Variable Information in Configs  \e[39m"
+    echo -e "\e[96m Replace variable information in configs  \e[39m"
 
     sudo sed -i "s/{MASTER_IP}/$masterip/" /opt/sliceup/executables/kafka_2.12-2.4.1/config/server-1.properties
     sudo sed -i "s/{MASTER_IP}/$masterip/" /opt/sliceup/executables/kafka_2.12-2.4.1/config/server-2.properties
@@ -265,7 +261,7 @@ export SSHPASS="$sspass1"
     echo "" > /opt/sliceup/executables/flink-1.10.0/conf/slaves
        
 #Grafana Install
-    echo -e "\e[96m Installing Grafana  \e[39m"
+    echo -e "\e[96m Installing Grafana.  \e[39m"
     sudo apt-get install -y adduser libfontconfig1
     wget https://dl.grafana.com/oss/release/grafana_7.0.4_amd64.deb
     sudo dpkg -i grafana_7.0.4_amd64.deb
@@ -278,9 +274,8 @@ export SSHPASS="$sspass1"
     
 
 ####Begin Master Start#####
-echo -e "\e[96m Installation is complete. Begin Master Service start?  \e[39m"
-read ready
-
+echo -e "\e[96m Installation is complete. Starting Master Service.  \e[39m"
+sleep 2
 
 ###################Starting the Services#######################3
 #  Grafana Start
@@ -289,20 +284,19 @@ read ready
     sudo /bin/systemctl start grafana-server
 
     sudo apt-get install -y jq
-    echo -e "\e[96m Restarting Grafana \e[39m"
     sudo /bin/systemctl stop grafana-server
     sleep 5
     sudo /bin/systemctl start grafana-server
     sleep 5
-    echo -e "\e[96m Changing Home Dashboard \e[39m"
     id=$(curl -X GET -H "Content-Type: application/json" http://admin:admin@127.0.0.1:3000/api/dashboards/uid/kC8AXaZMz | jq .dashboard.id)
     echo -e "\e[96m Dashboard ID is $id \e[39m"
     curl -X PUT -H "Content-Type: application/json" -d '{"theme": "", "homeDashboardId": '$id', "timezone": ""}' http://admin:admin@127.0.0.1:3000/api/org/preferences
+
+    echo -e "\e[96m Grafana installed successfully. \e[39m"
+    sleep 2
 
 #Enable service at startup
 echo -e "\e[96m Enable Slicemaster service  \e[39m"
 sudo systemctl enable slicemaster
 
     /opt/sliceup/scripts/masterstart.sh &
-    
-
