@@ -4,7 +4,7 @@
     echo -e "\e[96m Please ensure that all servers in the cluster have full access to each other.\e[39m"
     echo -e "\e[96m Make sure that all the worker nodes have the same password. \e[39m"
     echo -e "\e[96m When complete, go to http://ipaddress_of_master:3000 Default user: admin, password: admin.\e[39m"
-    echo -e "\ee[96m Press Enter to continue. \e[39m"
+    echo -e "\e[96m Press Enter to continue. \e[39m"
     read y 
 
 #Make sure the tar file is present.
