@@ -298,5 +298,4 @@ sleep 2
 #Enable service at startup
 echo -e "\e[96m Enable Slicemaster service  \e[39m"
 sudo systemctl enable slicemaster
-
-    /opt/sliceup/scripts/masterstart.sh &
+sudo systemctl start slicemaster

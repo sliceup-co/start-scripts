@@ -31,7 +31,7 @@
 # Start Cluster
     /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh 
 
-    echo -e "\e[96m Phase 0/5 of job initialization started.  \e[39m"
+    echo -e "\e[96m Job initialization started.  \e[39m"
     sleep 50
     echo -e "\e[96m Phase 0/5 of job initialization completed.  \e[39m"
     sleep 50
