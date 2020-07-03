@@ -228,12 +228,6 @@ export SSHPASS="$sspass1"
     python3 -m pip install selenium
     python3 -m pip install kafka-python
 
-    echo -e "\e[96m Create Zookeeper Config  \e[39m"
-
-    K=1 && mkdir /tmp/zookeeper$K && echo $K >> /tmp/zookeeper$K/myid
-    K=2 && mkdir /tmp/zookeeper$K && echo $K >> /tmp/zookeeper$K/myid
-    K=3 && mkdir /tmp/zookeeper$K && echo $K >> /tmp/zookeeper$K/myid
-
 
     echo -e "\e[96m Replace Variable Information in Configs  \e[39m"
 
@@ -288,10 +282,6 @@ echo -e "\e[96m Installation is complete. Begin Master Service start?  \e[39m"
 read ready
 
 
-
-
-
-
 ###################Starting the Services#######################3
 #  Grafana Start
     sudo /bin/systemctl daemon-reload
@@ -309,43 +299,10 @@ read ready
     echo -e "\e[96m Dashboard ID is $id \e[39m"
     curl -X PUT -H "Content-Type: application/json" -d '{"theme": "", "homeDashboardId": '$id', "timezone": ""}' http://admin:admin@127.0.0.1:3000/api/org/preferences
 
-
-echo -e "\e[96m Start Kafka  \e[39m"
-
-    export _JAVA_OPTIONS="-Djava.net.preferIPv4Stack=true"
-    sleep 5
-    /opt/sliceup/executables/kafka_2.12-2.4.1/bin/zookeeper-server-start.sh /opt/sliceup/executables/kafka_2.12-2.4.1/config/zookeeper1.properties &
-    sleep 5
-    /opt/sliceup/executables/kafka_2.12-2.4.1/bin/zookeeper-server-start.sh /opt/sliceup/executables/kafka_2.12-2.4.1/config/zookeeper2.properties &
-    sleep 5
-    /opt/sliceup/executables/kafka_2.12-2.4.1/bin/zookeeper-server-start.sh /opt/sliceup/executables/kafka_2.12-2.4.1/config/zookeeper3.properties &
-    sleep 5
-    /opt/sliceup/executables/kafka_2.12-2.4.1/bin/kafka-server-start.sh /opt/sliceup/executables/kafka_2.12-2.4.1/config/server-1.properties &
-    sleep 5
-    /opt/sliceup/executables/kafka_2.12-2.4.1/bin/kafka-server-start.sh /opt/sliceup/executables/kafka_2.12-2.4.1/config/server-2.properties &
-    sleep 5
-    /opt/sliceup/executables/kafka_2.12-2.4.1/bin/kafka-server-start.sh /opt/sliceup/executables/kafka_2.12-2.4.1/config/server-3.properties &
-    sleep 5
-    /opt/sliceup/executables/kafka_2.12-2.4.1/bin/kafka-server-start.sh /opt/sliceup/executables/kafka_2.12-2.4.1/config/server-4.properties &
-    sleep 5
-    vector --config /opt/sliceup/executables/vector/vector.toml &
-    echo -e "\e[96m FINISHED INSTALL OF KAFKA  \e[39m"
-    sleep 5
-
 #Enable service at startup
 echo -e "\e[96m Enable Slicemaster service  \e[39m"
 sudo systemctl enable slicemaster
 
-# Start Cluster
-echo -e "\e[96m Starting Cluster  \e[39m"
-/opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh #(It will ask the passwords of the worker nodes)
-sleep 300
-
-java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
-
-/opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/log-lines-proc-1.0.jar --init /opt/sliceup/executables/conf.ini 
-
-reboot -h 0
-
-
+    /opt/sliceup/scripts/masterstart.sh &
+    
 
