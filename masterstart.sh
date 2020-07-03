@@ -37,7 +37,6 @@
 
     echo -e "\e[96m Flink-job finished executing so we are restarting the job  \e[39m"
 
-    sleep 10
-    
+    exit 1    
 
 
