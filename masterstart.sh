@@ -46,23 +46,23 @@
 
     echo -e "\e[96m Job initialization started.  \e[39m"
     echo -e "\e[96m Stage 1/5  \e[39m"
-    #timebar
+    sleep 30
 ​
     echo -e "\e[96m Stage 2/5  \e[39m"
-    #timebar
+    sleep 30
 ​​
     echo -e "\e[96m Stage 3/5  \e[39m"
-    #timebar
+    sleep 30
 ​​
     echo -e "\e[96m Stage 4/5  \e[39m"
-    #timebar
+    sleep 30
 ​​
     echo -e "\e[96m Stage 5/5  \e[39m"
-    #timebar
+    sleep 30
     echo -e "\e[96m Done \e[39m"
 
     java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
-    sleep 50
+    sleep 30
     echo -e "\e[96m Phase 5/5 of job initialization completed.  \e[39m"
 
     /opt/sliceup/executables/flink-1.10.0/bin/flink run /opt/sliceup/executables/log-lines-proc-1.0.jar --init /opt/sliceup/executables/conf.ini
