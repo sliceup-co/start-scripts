@@ -45,21 +45,21 @@
     /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh 
 
     echo -e "\e[96m Job initialization started.  \e[39m"
-    echo "\e[96m Stage 1/5  \e[39m"
+    echo -e "\e[96m Stage 1/5  \e[39m"
     timebar
 ​
-    echo "\e[96m Stage 2/5  \e[39m"
+    echo -e "\e[96m Stage 2/5  \e[39m"
     timebar
 ​​
-    echo "\e[96m Stage 3/5  \e[39m"
+    echo -e "\e[96m Stage 3/5  \e[39m"
     timebar
 ​​
-    echo "\e[96m Stage 4/5  \e[39m"
+    echo -e "\e[96m Stage 4/5  \e[39m"
     timebar
 ​​
-    echo "\e[96m Stage 5/5  \e[39m"
+    echo -e "\e[96m Stage 5/5  \e[39m"
     timebar
-    echo "\e[96m Done \e[39m"
+    echo -e "\e[96m Done \e[39m"
 
     java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
     sleep 50
