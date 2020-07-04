@@ -47,24 +47,16 @@
     echo -e "\e[96m Job initialization started.  \e[39m"
     echo "\e[96m Stage 1/5  \e[39m"
     timebar
-
-    tput cuu1; tput cuu1
 ​
     echo "\e[96m Stage 2/5  \e[39m"
     timebar
-​
-    tput cuu1; tput cuu1
-​
+​​
     echo "\e[96m Stage 3/5  \e[39m"
     timebar
-​
-    tput cuu1; tput cuu1
-​
+​​
     echo "\e[96m Stage 4/5  \e[39m"
     timebar
-​
-    tput cuu1; tput cuu1
-​
+​​
     echo "\e[96m Stage 5/5  \e[39m"
     timebar
     echo "\e[96m Done \e[39m"
