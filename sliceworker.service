@@ -2,7 +2,8 @@
 Description=Slice Worker Start
 
 [Service]
-RemainAfterExit=true
+Restart=always
+RestartSec=3
 ExecStart=/usr/bin/python3 /opt/sliceup/executables/task-exec-monitor.py
 
 
