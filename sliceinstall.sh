@@ -110,6 +110,9 @@ export SSHPASS="$sspass1"
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/conf.ini"
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
+            insed="echo $sspass1 | sudo -S sed -i 's/{WORKER_IP}/$address/g' /opt/sliceup/executables/conf.ini"
+            sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
+
             sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "echo $sspass1 | sudo -S systemctl start sliceworker.service"
 
             echo -e "\e[96m Process finished for $address. \e[39m"
