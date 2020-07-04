@@ -1,5 +1,24 @@
 #!/bin/bash
 #create directory structure
+
+    # Time bar Function
+    function timebar(){
+​
+            i=0
+​
+​
+            echo -ne "[%0######################################################################################################]%100 \r [%0"
+​
+​
+            until [ $i -gt 100 ]
+            do
+              echo -ne "\e[96m#\e[39m"
+              ((i=i+1))
+            sleep .6
+            done
+            echo ""
+​
+    }
     
 
     K=1 && mkdir /tmp/zookeeper$K && echo $K >> /tmp/zookeeper$K/myid
@@ -32,17 +51,29 @@
     /opt/sliceup/executables/flink-1.10.0/bin/start-cluster.sh 
 
     echo -e "\e[96m Job initialization started.  \e[39m"
-    sleep 50
-    echo -e "\e[96m Phase 0/5 of job initialization completed.  \e[39m"
-    sleep 50
-    echo -e "\e[96m Phase 1/5 of job initialization completed.  \e[39m"
-    sleep 50
-    echo -e "\e[96m Phase 2/5 of job initialization completed.  \e[39m"
-    sleep 50
-    echo -e "\e[96m Phase 3/5 of job initialization completed.  \e[39m"
-    sleep 50
-    echo -e "\e[96m Phase 4/5 of job initialization completed.  \e[39m"
+    echo "\e[96m Stage 1/5  \e[39m"
+    timebar
 
+    tput cuu1; tput cuu1
+​
+    echo "\e[96m Stage 2/5  \e[39m"
+    timebar
+​
+    tput cuu1; tput cuu1
+​
+    echo "\e[96m Stage 3/5  \e[39m"
+    timebar
+​
+    tput cuu1; tput cuu1
+​
+    echo "\e[96m Stage 4/5  \e[39m"
+    timebar
+​
+    tput cuu1; tput cuu1
+​
+    echo "\e[96m Stage 5/5  \e[39m"
+    timebar
+    echo "\e[96m Done \e[39m"
 
     java -cp /opt/sliceup/executables/db-cleaner.jar com.sliceup.dbcleaner.Main /opt/sliceup/executables/conf.ini &
     sleep 50
