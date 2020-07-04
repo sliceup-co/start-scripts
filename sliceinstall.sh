@@ -110,8 +110,8 @@ export SSHPASS="$sspass1"
             insed="echo $sspass1 | sudo -S sed -i 's/{MASTER_IP}/$masterip/g' /opt/sliceup/executables/conf.ini"
 	        sshpass -ev ssh -t -o "StrictHostKeyChecking=no"  $address "$insed"  
 
-            sshpass -ev ssh -o "StrictHostKeyChecking=no" $address "nohup python3 /opt/sliceup/executables/task-exec-monitor.py $address > foo.out 2> foo.err < /dev/null &"
-            
+            sshpass -ev ssh -o "StrictHostKeyChecking=no" 10.12.2.41 "echo $sspass1 | sudo -S systemctl start sliceworker.service"
+
             echo -e "\e[96m Process finished for $address. \e[39m"
             sleep 2
          done
