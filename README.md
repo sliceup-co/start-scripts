@@ -6,5 +6,6 @@ This deployment configuration is set up to run as a POC. If you start with a 1tb
 
 Also for production, certificates will need to be installed, HTTPS will need to be configured, and database configurations will need to be refined to enhance security and match policies.
 
-These systems should start out with full and open communications between all devices in the cluster. Traffic that is not to or from the master/workers should be blocked for the worker nodes. The exception would be any protocols used for device administration. The master should allow the configured Syslog port, administration traffic, TCP port 3000, and full communication to the workers.
+These systems should start out with full and open communications between all devices in the cluster. Traffic that is not to or from the master/workers should be blocked for the worker nodes. The exception would be any protocols used for device administration. The master should allow the configured Syslog port, TCP port 3000, administration traffic, and full communication to the workers.
+
 
